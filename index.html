@@ -31,6 +31,29 @@ footer{border-top:1px solid var(--line);padding:24px 22px;color:var(--muted);tex
 .acc-item .cardfoot{margin-top:12px}
 @media(max-width:760px){.nav{padding:12px 15px}.navlinks{display:none}.nav .btn{margin-left:auto}.hero{grid-template-columns:1fr;padding-top:30px}.heroart{min-height:190px}.orb{width:135px;height:135px;font-size:48px}.grid{grid-template-columns:repeat(2,1fr)}main{padding:20px 15px 50px}.stats{gap:15px}.sectionhead{align-items:start;flex-direction:column}}
 @media(max-width:480px){.grid{grid-template-columns:1fr}.thumb{height:150px}.hero h1{font-size:42px}.stats{justify-content:space-between}.nav .btn{padding:9px 11px;font-size:12px}}
+  
+.messenger-float {
+  position: fixed;
+  right: 20px;
+  bottom: 25px;
+  z-index: 99999;
+}
+
+.messenger-float a {
+  width: 62px;
+  height: 62px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px #0084ff66;
+}
+
+.messenger-float img {
+  width: 42px;
+  height: 42px;
+}
 </style>
 </head>
 <body>
@@ -162,4 +185,36 @@ document.addEventListener('DOMContentLoaded', () => {
   render();
 });
 </script>
+  
+<!-- VOID BLOX MESSENGER -->
+<a href="https://m.me/TEN_FANPAGE"
+   target="_blank"
+   rel="noopener noreferrer"
+   style="
+     position: fixed;
+     right: 18px;
+     bottom: 25px;
+     width: 58px;
+     height: 58px;
+     border-radius: 50%;
+     background: white;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     box-shadow: 0 4px 15px #0084ff66;
+     z-index: 999999;
+     text-decoration: none;
+   ">
+
+  <img
+    src="https://cdn.simpleicons.org/messenger/0084FF"
+    alt="Messenger"
+    style="
+      width: 38px;
+      height: 38px;
+      display: block;
+      object-fit: contain;
+    ">
+</a>
+<!-- END VOID BLOX MESSENGER -->
 </body></html>
