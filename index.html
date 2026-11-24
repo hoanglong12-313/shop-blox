@@ -132,6 +132,12 @@ footer{border-top:1px solid var(--line);padding:24px 22px;color:var(--muted);tex
   <label class="label">Mật khẩu</label>
   <input class="field" id="password" type="password"
          placeholder="Nhập mật khẩu" autocomplete="current-password">
+   <div id="confirmPasswordBox" class="hidden">
+  <label class="label">Xác nhận mật khẩu</label>
+  <input class="field" id="confirmPassword" type="password"
+         placeholder="Nhập lại mật khẩu"
+         autocomplete="new-password">
+   </div>
 
   <button class="btn formbtn" id="authSubmit">Đăng nhập</button>
 
@@ -326,7 +332,10 @@ const authSubmit = document.getElementById('authSubmit');
 const authSwitchText = document.getElementById('authSwitchText');
 const authMessage = document.getElementById('authMessage');
 
-function setAuthMode(mode) {
+function setAuthMode(mode) {document.getElementById('confirmPasswordBox')
+  .classList.toggle('hidden', mode !== 'register');
+
+document.getElementById('confirmPassword').value = '';
   authMode = mode;
 
   document.getElementById('modalTitle').textContent =
@@ -379,6 +388,20 @@ authSubmit.onclick = async () => {
   if (!email || !password) {
     alert('Vui lòng nhập email và mật khẩu.');
     return;
+  }
+  if (authMode === 'register') {
+  const confirmPassword =
+    document.getElementById('confirmPassword').value;
+
+  if (!confirmPassword) {
+    alert('Vui lòng xác nhận mật khẩu.');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert('Mật khẩu xác nhận không khớp!');
+    return;
+  }
   }
 
   authSubmit.disabled = true;
