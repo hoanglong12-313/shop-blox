@@ -117,8 +117,28 @@ footer{border-top:1px solid var(--line);padding:24px 22px;color:var(--muted);tex
 <div class="modalback" id="modalBack"><div class="modal">
  <div class="modalhead"><h2 id="modalTitle">Đăng nhập</h2><button class="close" id="closeModal">✕</button></div>
  <div id="authPanel">
-  <p>Đăng nhập demo chỉ lưu trạng thái trên thiết bị này. Không dùng mật khẩu thật.</p>
-  <label class="label">Tên hiển thị</label><input class="field" id="username" placeholder="Tên của bạn">
+  <p id="authMessage">
+    Đăng ký hoặc đăng nhập tài khoản VOID BLOX SHOP.
+  </p>
+
+  <label class="label">Email</label>
+  <input class="field" id="username" type="email"
+         placeholder="Nhập email" autocomplete="email">
+
+  <label class="label">Mật khẩu</label>
+  <input class="field" id="password" type="password"
+         placeholder="Nhập mật khẩu" autocomplete="current-password">
+
+  <button class="btn formbtn" id="authSubmit">Đăng nhập</button>
+
+  <p id="authSwitchText">
+    Chưa có tài khoản?
+    <span class="switch" id="authSwitch">Đăng ký</span>
+  </p>
+ </div>
+  <p>Đăng ký hoặc đăng nhập tài khoản VOID BLOX SHOP bằng email.</p>
+  <label class="label">Email</label>
+<input class="field" id="username" type="email" placeholder="Nhập email của bạn">
   <label class="label" id="passLabel">Mật khẩu demo</label><input class="field" id="password" type="password" placeholder="Tạo mật khẩu demo">
   <button class="btn formbtn" id="authSubmit">Đăng nhập</button>
   <p id="authSwitchText">Chưa có tài khoản? <span class="switch" id="authSwitch">Đăng ký</span></p>
@@ -252,8 +272,8 @@ function removeItem(i){cart.splice(i,1);document.getElementById('cartCount').tex
 document.getElementById('search').addEventListener('input',render);document.getElementById('sort').addEventListener('change',render);
 document.getElementById('accSearch').addEventListener('input',renderAccPicker);document.getElementById('accSort').addEventListener('change',renderAccPicker);
 document.getElementById('accountBtn').onclick=()=>openModal('auth');document.getElementById('cartBtn').onclick=()=>openModal('cart');document.getElementById('closeModal').onclick=()=>document.getElementById('modalBack').classList.remove('show');document.getElementById('doneBtn').onclick=()=>document.getElementById('modalBack').classList.remove('show');
-document.getElementById('authSwitch').onclick=()=>{mode=mode==='login'?'register':'login';document.getElementById('modalTitle').textContent=mode==='login'?'Đăng nhập':'Đăng ký';document.getElementById('authSubmit').textContent=mode==='login'?'Đăng nhập':'Tạo tài khoản';document.getElementById('authSwitchText').innerHTML=mode==='login'?'Chưa có tài khoản? <span class="switch" id="authSwitch">Đăng ký</span>':'Đã có tài khoản? <span class="switch" id="authSwitch">Đăng nhập</span>';document.getElementById('authSwitch').onclick=()=>document.getElementById('authSwitchText').querySelector('span').click();};
-document.getElementById('authSubmit').onclick=()=>{let u=document.getElementById('username').value.trim();if(!u||!document.getElementById('password').value){alert('Nhập tên hiển thị và mật khẩu demo.');return}alert('Đây chỉ là giao diện thử nghiệm. Chưa có hệ thống tài khoản thật hoặc bảo mật máy chủ.')};
+
+
 document.getElementById('placeOrder').onclick=()=>{if(!cart.length){alert('Bạn chưa chọn sản phẩm.');return}let c=document.getElementById('contact').value.trim();if(!c){alert('Vui lòng nhập thông tin liên hệ.');return}document.getElementById('cartPanel').classList.add('hidden');document.getElementById('resultPanel').classList.remove('hidden');document.getElementById('modalTitle').textContent='Đã tạo bản nháp';document.getElementById('resultText').textContent='Yêu cầu demo đã được tạo trên giao diện. Chưa có dữ liệu nào được gửi hoặc thanh toán. Hãy tích hợp máy chủ và kênh liên hệ an toàn trước khi mở shop.';cart=[];document.getElementById('cartCount').textContent='0'};
 document.addEventListener('DOMContentLoaded', () => {
   render();
@@ -290,5 +310,127 @@ document.addEventListener('DOMContentLoaded', () => {
       object-fit: contain;
     ">
 </a>
+  <script type="module">
+import { createClient } from
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://ntxhlnomsfjhxvdnopnl.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_XHAxK7yahbMK4TcOZ9C39A_xU8wtoxS';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let authMode = 'login';
+
+const accountBtn = document.getElementById('accountBtn');
+const authSubmit = document.getElementById('authSubmit');
+const authSwitchText = document.getElementById('authSwitchText');
+const authMessage = document.getElementById('authMessage');
+
+function setAuthMode(mode) {
+  authMode = mode;
+
+  document.getElementById('modalTitle').textContent =
+    mode === 'login' ? 'Đăng nhập' : 'Đăng ký';
+
+  authSubmit.textContent =
+    mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản';
+
+  document.getElementById('password').autocomplete =
+    mode === 'login' ? 'current-password' : 'new-password';
+
+  authSwitchText.innerHTML = mode === 'login'
+    ? 'Chưa có tài khoản? <span class="switch" id="authSwitch">Đăng ký</span>'
+    : 'Đã có tài khoản? <span class="switch" id="authSwitch">Đăng nhập</span>';
+
+  authMessage.textContent = 'Đăng ký hoặc đăng nhập tài khoản VOID BLOX SHOP.';
+}
+
+authSwitchText.addEventListener('click', (event) => {
+  if (event.target.id === 'authSwitch') {
+    setAuthMode(authMode === 'login' ? 'register' : 'login');
+  }
+});
+
+function updateAccount(session) {
+  if (session?.user) {
+    accountBtn.textContent = 'Đăng xuất';
+    accountBtn.onclick = async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) alert(error.message);
+    };
+  } else {
+    accountBtn.textContent = 'Đăng nhập';
+    accountBtn.onclick = () => {
+      window.openModal('auth');
+      setAuthMode('login');
+    };
+  }
+}
+
+accountBtn.onclick = () => {
+  window.openModal('auth');
+  setAuthMode('login');
+};
+
+authSubmit.onclick = async () => {
+  const email = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!email || !password) {
+    alert('Vui lòng nhập email và mật khẩu.');
+    return;
+  }
+
+  authSubmit.disabled = true;
+  authSubmit.textContent = 'Đang xử lý...';
+
+  try {
+    let result;
+
+    if (authMode === 'register') {
+      result = await supabase.auth.signUp({ email, password });
+    } else {
+      result = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+    }
+
+    if (result.error) {
+      alert(result.error.message);
+      return;
+    }
+
+    if (authMode === 'register' && !result.data.session) {
+      authMessage.textContent =
+        'Đăng ký thành công! Hãy kiểm tra email để xác nhận tài khoản.';
+      return;
+    }
+
+    alert(authMode === 'register'
+      ? 'Đăng ký thành công!'
+      : 'Đăng nhập thành công!');
+
+    document.getElementById('modalBack').classList.remove('show');
+    document.getElementById('password').value = '';
+
+  } catch (error) {
+    alert('Có lỗi kết nối: ' + error.message);
+  } finally {
+    authSubmit.disabled = false;
+    authSubmit.textContent =
+      authMode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản';
+  }
+};
+
+supabase.auth.onAuthStateChange((event, session) => {
+  updateAccount(session);
+});
+
+const { data: { session } } = await supabase.auth.getSession();
+updateAccount(session);
+
+window.openModal = window.openModal;
+  </script>
 <!-- END VOID BLOX MESSENGER -->
 </body></html>
