@@ -100,6 +100,17 @@ footer{border-top:1px solid var(--line);padding:24px 22px;color:var(--muted);tex
  <select id="accSort"><option value="default">Sắp xếp mặc định</option><option value="low">Giá thấp đến cao</option><option value="high">Giá cao đến thấp</option></select></div>
  <div class="grid" id="accPickerGrid"></div>
 </section>
+  <section id="servicePickerPage" class="hidden">
+  <div class="sectionhead">
+    <div>
+      <button class="btn small secondary" onclick="backToShop()">
+        ← Quay lại shop
+      </button>
+      <h2 id="servicePickerTitle">Chi tiết dịch vụ</h2>
+    </div>
+  </div>
+  <div class="grid" id="servicePickerGrid"></div>
+  </section>
 </main>
 <footer>VOID BLOX SHOP — Giao diện mẫu • Không liên kết hoặc được Roblox bảo trợ.</footer>
 
@@ -138,7 +149,9 @@ const individualAccounts=[
 let selectedCategoryId=null;
 function card(p){
  const isAcc = p.type === 'acc';
- const action = isAcc ? `openAccPicker(${p.id})` : `addToCart(${p.id})`;
+ const action = isAcc
+  ? `openAccPicker(${p.id})`
+  : `openServicePicker(${p.id})`;
  const buttonLabel = isAcc ? 'Chọn acc' : 'Chọn';
  const serviceClass = isAcc ? '' : 'service';
  return `<article class="card ${serviceClass}"><div class="thumb">${p.icon}</div><div class="cardbody"><span class="tag">${p.tag}</span><h3>${p.name}</h3><div class="desc">${p.desc}</div><div class="price">${money(p.price)}</div><div class="cardfoot"><span class="stock">● Có thể yêu cầu</span><button class="btn small" onclick="${action}">${buttonLabel}</button></div></div></article>`;
@@ -155,7 +168,55 @@ function openAccPicker(categoryId){
  renderAccPicker();
  window.scrollTo(0,0);
 }
-function backToShop(){document.getElementById('accPickerPage').classList.add('hidden');document.getElementById('homeContent').classList.remove('hidden');window.scrollTo(0,0)}
+function backToShop(){
+  document.getElementById('accPickerPage').classList.add('hidden');
+  document.getElementById('servicePickerPage').classList.add('hidden');
+  document.getElementById('homeContent').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function openServicePicker(serviceId){
+  const service = products.find(
+    p => p.id === serviceId && p.type === 'service'
+  );
+
+  if(!service) return;
+
+  document.getElementById('homeContent').classList.add('hidden');
+  document.getElementById('accPickerPage').classList.add('hidden');
+  document.getElementById('servicePickerPage').classList.remove('hidden');
+
+  document.getElementById('servicePickerTitle').textContent = service.name;
+
+  document.getElementById('servicePickerGrid').innerHTML = `
+    <article class="card service">
+      <div class="thumb">${service.icon}</div>
+      <div class="cardbody">
+        <span class="tag">Dịch vụ riêng</span>
+        <h3>${service.name}</h3>
+        <div class="desc">${service.desc}</div>
+
+        <div class="price">${money(service.price)}</div>
+
+        <div class="notice">
+          Bảng giá tham khảo của dịch vụ.
+        </div>
+
+        <h3>Dịch vụ riêng</h3>
+        <p>Liên hệ shop để thuê dịch vụ.</p>
+
+        <a class="btn"
+           href="https://m.me/emlongdepz"
+           target="_blank"
+           rel="noopener noreferrer">
+          Liên hệ shop
+        </a>
+      </div>
+    </article>
+  `;
+
+  window.scrollTo(0,0);
+}
 function renderAccPicker(){
  const q=document.getElementById('accSearch').value.toLowerCase();
  let list=individualAccounts.filter(a=>a.categoryId===selectedCategoryId&&(a.id+' '+a.name+' '+a.level+' '+a.fruit+' '+a.info).toLowerCase().includes(q));
