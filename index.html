@@ -83,6 +83,16 @@ footer{border-top:1px solid var(--line);padding:24px 22px;color:var(--muted);tex
   height: 42px;
 }
 </style>
+ .thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.card .thumb{
+  overflow:hidden;
+}
 </head>
 <body>
 <header><div class="nav">
@@ -182,10 +192,10 @@ footer{border-top:1px solid var(--line);padding:24px 22px;color:var(--muted);tex
 </div></div>
 <script>
 const products=[
- {id:1,type:'acc',name:'random acc',desc:'Thông tin tài khoản mẫu — hãy thay bằng mô tả của bạn.',price:50000,icon:'🌊',tag:'Tài khoản mẫu'},
- {id:2,type:'acc',name:'random acc 1500-2400',desc:'Mô tả tiến trình và vật phẩm sở hữu (nếu phù hợp).',price:120000,icon:'🔥',tag:'Tài khoản mẫu'},
- {id:3,type:'acc',name:'Acc random đầy đủ 2500+',desc:'Sản phẩm minh họa, chưa phải tài khoản có thật.',price:250000,icon:'💎',tag:'Tài khoản mẫu'},
- {id:4,type:'service',name:'Gói cày thuê siêu tốc',desc:'Gói dịch vụ mẫu. Xác nhận phạm vi và điều kiện trước khi đặt.',price:0,icon:'🧭',tag:'Dịch vụ'}
+ {id:1,type:'acc',name:'random acc',desc:'Thông tin tài khoản mẫu — hãy thay bằng mô tả của bạn.',price:50000,img:'https://drive.google.com/thumbnail?id=1KiQSfLrg9LFktGdYGXLwCeM3BGPanz7R&sz=w1000',tag:'Tài khoản mẫu'},
+ {id:2,type:'acc',name:'random acc 1500-2400',desc:'Mô tả tiến trình và vật phẩm sở hữu (nếu phù hợp).',price:120000,img:'https://drive.google.com/thumbnail?id=1KiQSfLrg9LFktGdYGXLwCeM3BGPanz7R&sz=w1000',tag:'Tài khoản mẫu'},
+ {id:3,type:'acc',name:'Acc random đầy đủ 2500+',desc:'Sản phẩm minh họa, chưa phải tài khoản có thật.',price:250000,img:'https://drive.google.com/thumbnail?id=1KiQSfLrg9LFktGdYGXLwCeM3BGPanz7R&sz=w1000',tag:'Tài khoản mẫu'},
+ {id:4,type:'service',name:'Gói cày thuê siêu tốc',desc:'Gói dịch vụ mẫu. Xác nhận phạm vi và điều kiện trước khi đặt.',price:0,img:'https://drive.google.com/thumbnail?id=1KiQSfLrg9LFktGdYGXLwCeM3BGPanz7R&sz=w1000',tag:'Dịch vụ'}
 ];
 let cart=[];let mode='login';
 const money=n=>n.toLocaleString('vi-VN')+'đ';
@@ -206,7 +216,9 @@ function card(p){
   : `openServicePicker(${p.id})`;
  const buttonLabel = isAcc ? 'Chọn acc' : 'Chọn';
  const serviceClass = isAcc ? '' : 'service';
- return `<article class="card ${serviceClass}"><div class="thumb">${p.icon}</div><div class="cardbody"><span class="tag">${p.tag}</span><h3>${p.name}</h3><div class="desc">${p.desc}</div><div class="price">${money(p.price)}</div><div class="cardfoot"><span class="stock">● Có thể yêu cầu</span><button class="btn small" onclick="${action}">${buttonLabel}</button></div></div></article>`;
+ return `<article class="card ${serviceClass}"<div class="thumb">
+  <img src="${p.icon}" alt="${p.name}">
+</div><div class="cardbody"><span class="tag">${p.tag}</span><h3>${p.name}</h3><div class="desc">${p.desc}</div><div class="price">${money(p.price)}</div><div class="cardfoot"><span class="stock">● Có thể yêu cầu</span><button class="btn small" onclick="${action}">${buttonLabel}</button></div></div></article>`;
 }
 function render(){let q=document.getElementById('search').value.toLowerCase();let arr=products.filter(p=>p.type==='acc'&&p.name.toLowerCase().includes(q));let s=document.getElementById('sort').value;if(s==='low')arr.sort((a,b)=>a.price-b.price);if(s==='high')arr.sort((a,b)=>b.price-a.price);document.getElementById('accountGrid').innerHTML=arr.map(card).join('');document.getElementById('serviceGrid').innerHTML=products.filter(p=>p.type==='service').map(card).join('')}
 function openAccPicker(categoryId){
