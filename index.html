@@ -195,7 +195,7 @@ footer{border-top:1px solid var(--line);padding:24px 22px;color:var(--muted);tex
   
     
   
-  
+  </div>
  
   
   
@@ -250,16 +250,6 @@ function card(p){
       </div>
     </div>
   </article>`;
-}
- const isAcc = p.type === 'acc';
- const action = isAcc
-  ? `openAccPicker(${p.id})`
-  : `openServicePicker(${p.id})`;
- const buttonLabel = isAcc ? 'Chọn acc' : 'Chọn';
- const serviceClass = isAcc ? '' : 'service';
- return `<article class="card ${serviceClass}"<div class="thumb">
-  <img src="${p.icon}" alt="${p.name}">
-</div><div class="cardbody"><span class="tag">${p.tag}</span><h3>${p.name}</h3><div class="desc">${p.desc}</div><div class="price">${money(p.price)}</div><div class="cardfoot"><span class="stock">● Có thể yêu cầu</span><button class="btn small" onclick="${action}">${buttonLabel}</button></div></div></article>`;
 }
 function render(){let q=document.getElementById('search').value.toLowerCase();let arr=products.filter(p=>p.type==='acc'&&p.name.toLowerCase().includes(q));let s=document.getElementById('sort').value;if(s==='low')arr.sort((a,b)=>a.price-b.price);if(s==='high')arr.sort((a,b)=>b.price-a.price);document.getElementById('accountGrid').innerHTML=arr.map(card).join('');document.getElementById('serviceGrid').innerHTML=products.filter(p=>p.type==='service').map(card).join('')}
 function openAccPicker(categoryId){
