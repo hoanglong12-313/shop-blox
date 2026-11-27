@@ -477,8 +477,39 @@ authSwitchText.addEventListener('click', (event) => {
   }
 });
 
+
 function updateAccount(session) {
   if (session?.user) {
+    accountBtn.textContent = 'Đăng xuất';
+
+    accountBtn.onclick = async () => {
+      const confirmLogout = confirm(
+        'Bạn có chắc chắn muốn đăng xuất không?'
+      );
+
+      if (!confirmLogout) return;
+
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        alert('Đăng xuất thất bại: ' + error.message);
+        return;
+      }
+
+      alert('Đã đăng xuất thành công!');
+    };
+
+  } else {
+    accountBtn.textContent = 'Đăng nhập';
+
+    accountBtn.onclick = () => {
+      window.openModal('auth');
+      setAuthMode('login');
+    };
+  }
+}
+   
+  
     accountBtn.textContent = 'Đăng xuất';
     accountBtn.onclick = async () => {
       const { error } = await async function logout() {
@@ -500,10 +531,10 @@ function updateAccount(session) {
     };
   } else {
     accountBtn.textContent = 'Đăng nhập';
-    accountBtn.onclick = () => {
-      window.openModal('auth');
-      setAuthMode('login');
-    };
+    
+      
+      
+    
   }
 }
 
